@@ -1,0 +1,33 @@
+@gitignore{
+    # Python
+    *.pyc
+    *.pyo
+    *.pyd
+    __pycache__/
+    *.so
+    *.egg
+    *.egg-info/
+    dist/
+    build/
+    *.tar.gz
+    
+    # IDEs
+    .vscode/
+    .idea/
+    *.swp
+    *.swo
+    *.swn
+    
+    # OS
+    .DS_Store
+    Thumbs.db
+}
+
+@dockerignore{
+	# Ignore everything
+	**
+	
+	# Except these files/directories
+	!Dockerfile
+	!src/	
+}
