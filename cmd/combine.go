@@ -15,7 +15,7 @@ var combine = &cobra.Command{
 	Use:   "combine",
 	Short: "Combine multiple .gitignore files into one",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := iggy.Combine(args...)
+		err := iggy.CombineAll()
 		if err != nil {
 			log.Fatal(err)
 		}

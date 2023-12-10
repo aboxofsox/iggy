@@ -7,6 +7,7 @@ import (
 
 type HandlerFunc func(string, os.DirEntry)
 
+// ReadDir() recursively reads a directory and calls a handler function on each file.
 func ReadDir(dir string, handler HandlerFunc) error {
 	files, err := os.ReadDir(dir)
 	if err != nil {
