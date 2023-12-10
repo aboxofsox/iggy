@@ -8,7 +8,7 @@ foreach ($Platform in $Platforms) {
     $env:GOOS = $GOOS
     $env:GOARCH = $Arch
 
-    $Output = "bin/$GOOS/$Arch/iggy"
+    $Output = "bin/$GOOS/$Arch/iggy-$GOOS-$ARCH"
 
     $PercentComplete = [math]::Round($i/$Platforms.Length * 100)
 
