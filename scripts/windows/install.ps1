@@ -20,3 +20,6 @@ foreach ($Asset in $Assets) {
 
     Invoke-WebRequest -Uri $URL -OutFile $Output
 }
+
+$Path = [System.Environment]::GetEnvironmentVariable('Path', 'User') + ";$RootDir"
+[System.Environment]::SetEnvironmentVariable('Path', $Path, 'User')
