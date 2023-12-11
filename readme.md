@@ -6,7 +6,15 @@ A non-standard way of combining `.ignore` files.
 `go install -u github.com/aboxofsox/iggy@latest`
 
 ### Without Go
-Download the binary for your system, or run the `install` script relevant for your system.
+#### Windows
+- Clone the repository.
+- Run `install.ps1` from scripts.
+- Restart PowerShell session.
+
+#### Unix
+- Clone repository.
+- Run `install.sh` from scripts.
+- Do whatever you want with the binary.
 
 ## Usage
 ```

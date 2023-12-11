@@ -6,9 +6,10 @@ if (!(Test-Path -Path $RootDir)) {
     New-Item -Path $RootDir -ItemType Directory
 }
 
+
 $LatestRelease = Invoke-RestMethod -Uri $URL
 
-$Assets = $LatestRelease.$Assets
+$Assets = $LatestRelease.Assets
 
 foreach ($Asset in $Assets) {
     $Name = $Asset.name

@@ -1,3 +1,5 @@
+github.com/aboxofsox/semver v0.0.0-20231120053626-722dc4e9486f h1:r3TvsjJNJgnF8hDQLloN0gwVsWsUmnkySmXItJEIm/A=
+github.com/aboxofsox/semver v0.0.0-20231120053626-722dc4e9486f/go.mod h1:y7JeIEfS/ySWOW51wulR7iQVq2WWONmrSjTT0kyhXqI=
 github.com/cpuguy83/go-md2man/v2 v2.0.3/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
