@@ -3,7 +3,6 @@
 Platforms=("windows/amd64" "windows/386" "linux/amd64" "linux/386" "darwin/amd64")
 length=${#Platforms[@]}
 
-i=0
 for Platform in "${Platforms[@]}"; do
     GOOS=${Platform%%/*}
     Arch=${Platform##*/}
@@ -13,9 +12,7 @@ for Platform in "${Platforms[@]}"; do
 
     Output="bin/$GOOS/$Arch/iggy"
 
-    PercentComplete=$(printf "%.0f" $(echo "$i/$length*100" | bc -l))
-
-    echo "Building iggy: Building for $GOOS/$Arch. Completion: $PercentComplete%"
+    echo "Building iggy: Building for $GOOS/$Arch."
 
     if [ $GOOS = 'windows' ]; then
         Output+='.exe'
@@ -28,5 +25,4 @@ for Platform in "${Platforms[@]}"; do
         exit 1
     fi
 
-    ((i++))
 done
