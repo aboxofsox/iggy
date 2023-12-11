@@ -113,18 +113,6 @@ func CombineAll() error {
 	return Combine(paths...)
 }
 
-// func moveFile(path string) error {
-// 	if _, err := os.Stat("ignore"); os.IsNotExist(err) {
-// 		if err := os.Mkdir("ignore", os.ModeDir); err != nil {
-// 			return err
-// 		}
-// 	}
-
-// 	fp := filepath.Join("ignore", filepath.Base(path))
-
-// 	return os.Rename(path, fp)
-// }
-
 func writeToFile(f *os.File, s string) error {
 	_, err := f.WriteString(s)
 	return err
