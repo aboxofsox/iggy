@@ -5,22 +5,6 @@ if (!(Test-Path -Path 'bin')) {
 }
 
 $GitTag = git describe --tags --abbrev=0
-$Version = Get-Content -Path 'version.txt'
-
-if (Compare-Versions -Version1 $GitTag -Version2 $Version -eq 0) {
-    Write-Host 'No new version'
-    exit 0
-}
-
-switch (Compare-Versions -Version1 $GitTag -Version2 $Version) {
-    1 {
-        Write-Host "New version $GitTag"
-    }
-    -1 {
-        Write-Host "Version $Version is newer than $GitTag"
-        exit 0
-    }
-}
 
 $i = 0
 foreach ($Platform in $Platforms) {

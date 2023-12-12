@@ -1,10 +1,17 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"net/url"
 	"os"
+	"path"
+	"path/filepath"
+	"runtime"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -27,19 +34,62 @@ var checkForUpdates = &cobra.Command{
 		fmt.Println("Checking for updates...")
 		err := update()
 		if err != nil {
-			panic(err)
+			log.Fatal(err.Error())
 		}
 	},
 }
 
 func update() error {
-	res, err := http.Get("https://api.github.com/repos/aboxofsox/iggy/releases/latest")
+	var releases []*Release
+
+	res, err := http.Get("https://api.github.com/repos/aboxofsox/iggy/releases")
 	if err != nil {
 		return err
 	}
 	defer res.Body.Close()
 
-	f, err := os.OpenFile("iggy.exe", os.O_CREATE|os.O_WRONLY, 0755)
+	err = decodeJSON(res.Body, &releases)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Latest version: %s\n", releases[0].TagName)
+
+	releaseUrl, err := findSystemRelease("1.0.0", releases) // TODO: get version from somewhere or latest
+	if err != nil {
+		return err
+	}
+
+	if _, err := os.Stat(installDir()); os.IsNotExist(err) {
+		if err := os.Mkdir(installDir(), os.ModeDir); err != nil {
+			return err
+		}
+	}
+
+	err = downloadFile(releaseUrl, filepath.Join(installDir(), base(releaseUrl)))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func decodeJSON(r io.Reader, v any) error {
+	return json.NewDecoder(r).Decode(v)
+}
+
+func downloadFile(url, filename string) error {
+	res, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("%s - %d", res.Status, res.StatusCode)
+	}
+
+	f, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
@@ -51,4 +101,47 @@ func update() error {
 	}
 
 	return nil
+}
+
+func isWindows() bool {
+	return runtime.GOOS == "windows"
+}
+
+func moveFile(from, to string) error {
+	return os.Rename(from, to)
+}
+
+func installDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return os.TempDir()
+	}
+	return filepath.Join(home, "iggy")
+}
+
+func findSystemRelease(tagname string, rs []*Release) (string, error) {
+	for _, r := range rs {
+		if strings.ToLower(r.TagName) != strings.ToLower(tagname) {
+			continue
+		}
+
+		if len(r.Assets) == 0 {
+			continue
+		}
+		for _, asset := range r.Assets {
+			if strings.Contains(asset.BrowserDownloadUrl, runtime.GOOS) {
+				return asset.BrowserDownloadUrl, nil
+			}
+		}
+	}
+
+	return "", fmt.Errorf("no release for %s", runtime.GOOS)
+}
+
+func base(p string) string {
+	u, err := url.Parse(p)
+	if err != nil {
+		return ""
+	}
+	return path.Base(u.Path)
 }
