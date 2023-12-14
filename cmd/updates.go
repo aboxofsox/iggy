@@ -6,9 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
-	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -66,7 +64,11 @@ func update() error {
 		}
 	}
 
-	err = downloadFile(releaseUrl, filepath.Join(installDir(), base(releaseUrl)))
+	name := "iggy"
+	if runtime.GOOS == "windows" {
+		name = name + ".exe"
+	}
+	err = downloadFile(releaseUrl, filepath.Join(installDir(), name))
 	if err != nil {
 		return err
 	}
@@ -103,13 +105,9 @@ func downloadFile(url, filename string) error {
 	return nil
 }
 
-func isWindows() bool {
-	return runtime.GOOS == "windows"
-}
-
-func moveFile(from, to string) error {
-	return os.Rename(from, to)
-}
+// func moveFile(from, to string) error {
+// 	return os.Rename(from, to)
+// }
 
 func installDir() string {
 	home, err := os.UserHomeDir()
@@ -121,7 +119,7 @@ func installDir() string {
 
 func findSystemRelease(tagname string, rs []*Release) (string, error) {
 	for _, r := range rs {
-		if strings.ToLower(r.TagName) != strings.ToLower(tagname) {
+		if !strings.EqualFold(r.TagName, tagname) {
 			continue
 		}
 
@@ -138,10 +136,10 @@ func findSystemRelease(tagname string, rs []*Release) (string, error) {
 	return "", fmt.Errorf("no release for %s", runtime.GOOS)
 }
 
-func base(p string) string {
-	u, err := url.Parse(p)
-	if err != nil {
-		return ""
-	}
-	return path.Base(u.Path)
-}
+// func base(p string) string {
+// 	u, err := url.Parse(p)
+// 	if err != nil {
+// 		return ""
+// 	}
+// 	return path.Base(u.Path)
+// }
